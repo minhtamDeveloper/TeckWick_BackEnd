@@ -25,7 +25,7 @@ public class LoginController : ControllerBase
     public IActionResult login(Account account)
     {
         ;
-        return Ok(CreateToken(account.Username, account.FullName, account.Role));
+        return Ok(CreateToken(account.Username, account.Username, account.Username));
     }
     private string CreateToken(string username,string name, string role)
     {
