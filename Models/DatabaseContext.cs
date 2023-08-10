@@ -43,13 +43,13 @@ public partial class DatabaseContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=LAPTOP-PV86VKQR\\SQLEXPRESS;Database=PlantNestDB;user id=sa;password=112233;trusted_connection=true;encrypt=false");
+        => optionsBuilder.UseSqlServer("Server=DNGUYXNTUANANH;Database=PlantNestDB;user id=sa;password=0335167226aA;trusted_connection=true;encrypt=false");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__account__3213E83F6B8E6B1B");
+            entity.HasKey(e => e.Id).HasName("PK__account__3213E83F6D8888EB");
 
             entity.ToTable("account");
 
@@ -71,10 +71,6 @@ public partial class DatabaseContext : DbContext
                 .HasMaxLength(250)
                 .IsUnicode(false)
                 .HasColumnName("email");
-            entity.Property(e => e.Fullname)
-                .HasMaxLength(250)
-                .IsUnicode(false)
-                .HasColumnName("fullname");
             entity.Property(e => e.Password)
                 .HasMaxLength(250)
                 .IsUnicode(false)
@@ -97,16 +93,17 @@ public partial class DatabaseContext : DbContext
 
         modelBuilder.Entity<Cart>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__cart__3213E83FA30A1D72");
+            entity.HasKey(e => e.Id).HasName("PK__cart__3213E83F699F73CB");
 
             entity.ToTable("cart");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.AccountId).HasColumnName("account_id");
+            entity.Property(e => e.Price)
+                .HasColumnType("decimal(10, 0)")
+                .HasColumnName("price");
+            entity.Property(e => e.ProductId).HasColumnName("product_id");
             entity.Property(e => e.Quantity).HasColumnName("quantity");
-            entity.Property(e => e.RegisId)
-                .IsUnicode(false)
-                .HasColumnName("regis_id");
 
             entity.HasOne(d => d.Account).WithMany(p => p.Carts)
                 .HasForeignKey(d => d.AccountId)
@@ -115,7 +112,7 @@ public partial class DatabaseContext : DbContext
 
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__category__3213E83F72AF3834");
+            entity.HasKey(e => e.Id).HasName("PK__category__3213E83F5C6D9503");
 
             entity.ToTable("category");
 
@@ -141,7 +138,7 @@ public partial class DatabaseContext : DbContext
 
         modelBuilder.Entity<Comment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__comment__3213E83F0BCCC400");
+            entity.HasKey(e => e.Id).HasName("PK__comment__3213E83FFA3C95C2");
 
             entity.ToTable("comment");
 
@@ -164,7 +161,7 @@ public partial class DatabaseContext : DbContext
 
         modelBuilder.Entity<Contact>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__contact__3213E83F118AE634");
+            entity.HasKey(e => e.Id).HasName("PK__contact__3213E83FED0DA462");
 
             entity.ToTable("contact");
 
@@ -192,7 +189,7 @@ public partial class DatabaseContext : DbContext
 
         modelBuilder.Entity<Delivery>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__delivery__3213E83F676F6889");
+            entity.HasKey(e => e.Id).HasName("PK__delivery__3213E83F3D3FDC64");
 
             entity.ToTable("delivery");
 
@@ -231,15 +228,13 @@ public partial class DatabaseContext : DbContext
 
         modelBuilder.Entity<FavoriteCart>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__favorite__3213E83F958EAA1A");
+            entity.HasKey(e => e.Id).HasName("PK__favorite__3213E83F5A0EBA27");
 
             entity.ToTable("favoriteCart");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.AccountId).HasColumnName("account_id");
-            entity.Property(e => e.RegisId)
-                .IsUnicode(false)
-                .HasColumnName("regis_id");
+            entity.Property(e => e.ProductId).HasColumnName("product_id");
 
             entity.HasOne(d => d.Account).WithMany(p => p.FavoriteCarts)
                 .HasForeignKey(d => d.AccountId)
@@ -248,7 +243,7 @@ public partial class DatabaseContext : DbContext
 
         modelBuilder.Entity<Image>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__image__3213E83FA88E25CE");
+            entity.HasKey(e => e.Id).HasName("PK__image__3213E83FF9AC8EA9");
 
             entity.ToTable("image");
 
@@ -265,7 +260,7 @@ public partial class DatabaseContext : DbContext
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__order__3213E83FA363B365");
+            entity.HasKey(e => e.Id).HasName("PK__order__3213E83FA8EE29F3");
 
             entity.ToTable("order");
 
@@ -297,7 +292,7 @@ public partial class DatabaseContext : DbContext
 
         modelBuilder.Entity<OrderDetail>(entity =>
         {
-            entity.HasKey(e => new { e.OrderId, e.ProductId }).HasName("PK__orderDet__022945F6EEB4F2EC");
+            entity.HasKey(e => new { e.OrderId, e.ProductId }).HasName("PK__orderDet__022945F6AB961A7C");
 
             entity.ToTable("orderDetail");
 
@@ -326,7 +321,7 @@ public partial class DatabaseContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__product__3213E83F53EE0BC2");
+            entity.HasKey(e => e.Id).HasName("PK__product__3213E83F2F84D572");
 
             entity.ToTable("product");
 
@@ -335,25 +330,18 @@ public partial class DatabaseContext : DbContext
             entity.Property(e => e.CostPrice)
                 .HasColumnType("decimal(10, 0)")
                 .HasColumnName("cost_price");
-            entity.Property(e => e.CurrentQuantity).HasColumnName("current_quantity");
+            entity.Property(e => e.CreatedDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("date")
+                .HasColumnName("created_date");
             entity.Property(e => e.Description)
                 .IsUnicode(false)
                 .HasColumnName("description");
-            entity.Property(e => e.ExpirationDate)
-                .HasColumnType("date")
-                .HasColumnName("expiration_date");
-            entity.Property(e => e.ImportDate)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("date")
-                .HasColumnName("import_date");
-            entity.Property(e => e.ImportQuantity).HasColumnName("import_quantity");
             entity.Property(e => e.ProductName)
                 .HasMaxLength(250)
                 .IsUnicode(false)
                 .HasColumnName("product_name");
-            entity.Property(e => e.RegisId)
-                .IsUnicode(false)
-                .HasColumnName("regis_id");
+            entity.Property(e => e.Quantity).HasColumnName("quantity");
             entity.Property(e => e.SellPrice)
                 .HasColumnType("decimal(10, 0)")
                 .HasColumnName("sell_price");
@@ -371,7 +359,7 @@ public partial class DatabaseContext : DbContext
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__role__3213E83FD2193099");
+            entity.HasKey(e => e.Id).HasName("PK__role__3213E83F1991A6BF");
 
             entity.ToTable("role");
 
@@ -391,7 +379,7 @@ public partial class DatabaseContext : DbContext
 
         modelBuilder.Entity<Supplier>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__supplier__3213E83FB8562630");
+            entity.HasKey(e => e.Id).HasName("PK__supplier__3213E83F370017A3");
 
             entity.ToTable("supplier");
 

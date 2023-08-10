@@ -9,9 +9,11 @@ public partial class Cart
 
     public int? AccountId { get; set; }
 
-    public string? RegisId { get; set; }
+    public int? ProductId { get; set; }
 
     public int? Quantity { get; set; }
+
+    public decimal? Price { get; set; }
 
     public virtual Account? Account { get; set; }
 }
