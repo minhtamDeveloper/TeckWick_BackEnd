@@ -6,7 +6,7 @@ using PlantNestBackEnd.Services.Impl;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var stringConnection = builder.Configuration["ConnectionStrings:Default"];
+var stringConnection = "workstation id=PlantNestDB.mssql.somee.com;packet size=4096;user id=minhtamceo2_SQLLogin_1;pwd=pf71j8t97t;data source=PlantNestDB.mssql.somee.com;persist security info=False;initial catalog=PlantNestDB";
 builder.Services.AddDbContext<DatabaseContext>(option =>option.UseLazyLoadingProxies().UseSqlServer(stringConnection));
 builder.Services.AddControllers();
 builder.Services.AddCors();
