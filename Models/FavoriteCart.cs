@@ -9,7 +9,7 @@ public partial class FavoriteCart
 
     public int? AccountId { get; set; }
 
-    public string? RegisId { get; set; }
+    public int? ProductId { get; set; }
 
     public virtual Account? Account { get; set; }
 }

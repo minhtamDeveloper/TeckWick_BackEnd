@@ -9,4 +9,5 @@ public interface IProduct
     Task<bool> create(Product product);
     Task<bool> update(Product product);
     Task<bool> delete(int id);
+    Task<bool> exist (int id);
 }

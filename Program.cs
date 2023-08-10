@@ -6,7 +6,7 @@ using PlantNestBackEnd.Services.Impl;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var stringConnection = "workstation id=PlantNestDB.mssql.somee.com;packet size=4096;user id=minhtamceo2_SQLLogin_1;pwd=pf71j8t97t;data source=PlantNestDB.mssql.somee.com;persist security info=False;initial catalog=PlantNestDB";
+var stringConnection = builder.Configuration["ConnectionStrings:Default"];
 builder.Services.AddDbContext<DatabaseContext>(option =>option.UseLazyLoadingProxies().UseSqlServer(stringConnection));
 builder.Services.AddControllers();
 builder.Services.AddCors();
@@ -16,6 +16,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IProduct, ProductImpl>();
 builder.Services.AddScoped<ICategory, CategoryImpl>();
+builder.Services.AddScoped<IUser, UserImpl>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

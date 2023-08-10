@@ -9,21 +9,15 @@ public partial class Product
 
     public string? ProductName { get; set; }
 
-    public string? RegisId { get; set; }
-
     public string? Description { get; set; }
 
     public decimal? CostPrice { get; set; }
 
     public decimal? SellPrice { get; set; }
 
-    public int? ImportQuantity { get; set; }
+    public int? Quantity { get; set; }
 
-    public int? CurrentQuantity { get; set; }
-
-    public DateTime? ImportDate { get; set; }
-
-    public DateTime? ExpirationDate { get; set; }
+    public DateTime? CreatedDate { get; set; }
 
     public int? SupplierId { get; set; }
 

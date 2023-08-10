@@ -11,7 +11,6 @@ public class ProductImpl : IProduct
     public async Task<bool> create(Product product)
     {
         try {
-           // if(db.Products.Where())
             db.Products.Add(product);
             return (await db.SaveChangesAsync()) >0;
         }catch(Exception ex) { 
@@ -26,6 +25,19 @@ public class ProductImpl : IProduct
         {
             db.Products.Remove(db.Products.Find(id));
             return (await db.SaveChangesAsync()) > 0;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex);
+            return false;
+        }
+    }
+
+    public async Task<bool> exist(int id)
+    {
+        try
+        {
+            return (await db.Products.Where(p=>p.Id ==id).CountAsync()) > 0;
         }
         catch (Exception ex)
         {

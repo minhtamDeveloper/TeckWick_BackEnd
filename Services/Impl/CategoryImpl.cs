@@ -41,6 +41,19 @@ public class CategoryImpl : ICategory
         }
     }
 
+    public async Task<bool> exist(int id)
+    {
+        try
+        {
+            return (await db.Categories.Where(p => p.Id == id).CountAsync()) > 0;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex);
+            return false;
+        }
+    }
+
     public async Task<dynamic> findAll()
     {
         try
@@ -52,6 +65,7 @@ public class CategoryImpl : ICategory
                 categoryImage = c.CategoryImage,
                 created = c.Created,
                 status = c.Status,
+                categoryId = c.CategoryId
             }).ToListAsync();
         }
         catch (Exception ex)
@@ -72,6 +86,7 @@ public class CategoryImpl : ICategory
                 categoryImage = c.CategoryImage,
                 created = c.Created,
                 status = c.Status,
+                categoryId=c.CategoryId
             }).FirstOrDefaultAsync();
         }
         catch (Exception ex)

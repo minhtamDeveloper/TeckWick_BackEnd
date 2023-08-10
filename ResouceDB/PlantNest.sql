@@ -12,6 +12,7 @@ drop table if exists account
 create table account 
 (
 	id int primary key identity,
+	fullname varchar(250),
 	username varchar(250),
 	"password" varchar(250),
 	email varchar(250),
@@ -24,9 +25,6 @@ create table account
 	"status" bit
 )
 go
-
-ALTER TABLE account
-ADD fullname varchar(250);
 
 
 drop table if exists "role"
@@ -105,28 +103,27 @@ drop table if exists product
 create table product 
 (
 	id int primary key identity,
-	product_name varchar(250),
-	regis_id varchar(max),
+	product_name varchar(250),	
 	"description" varchar(max),
 	cost_price decimal(10), --giá nhập
 	sell_price decimal(10), -- giá bán
-	import_quantity int, -- số lượng nhập
-	current_quantity int, -- số lượng hiện tại
-	import_date date default getdate(), -- ngày nhập, tự động lấy ngày hiện tại
-	expiration_date date, -- ngày hết hạn của sản phẩm
+	quantity int, -- số lượng hiện tại
+	created_date date default getdate(), -- ngày nhập, tự động lấy ngày hiện tại
 	supplier_id int, -- id của nhà cung cấp
 	category_id int, -- id loại hàng
 	"status" bit
 )
 go
 
+
 drop table if exists cart
 create table cart
 (
 	id int primary key identity,
 	account_id int,
-	regis_id varchar(max),
+	product_id int,
 	quantity int,
+	price decimal(10),
 )
 go
 
@@ -135,7 +132,7 @@ create table favoriteCart
 (
 	id int primary key identity,
 	account_id int,
-	regis_id varchar(max),
+	product_id int ,
 )
 go
 
@@ -220,6 +217,7 @@ alter table "image"
 add constraint fk_product_image
 foreign key (product_id) references product(id)
 
+
 -- category -> product
 alter table product
 add constraint fk_category_product
@@ -276,10 +274,10 @@ insert into category (category_id, category_image, category_name, "status" ) val
 insert into category (category_id, category_image, category_name, "status" ) values ( 5, null, 'Pesticide', 1)
 
 -- 5. PRODUCT
-insert into product ( product_name, "description", cost_price, sell_price, import_quantity, current_quantity, expiration_date, supplier_id, category_id, "status" )
-values ( 'Product 1', 'nothing to show', 1000.5, 2000.3, 80, 50, '2025-08-09', 1, 1, 1)
-insert into product ( product_name, "description", cost_price, sell_price, import_quantity, current_quantity, expiration_date, supplier_id, category_id, "status" )
-values ( 'Product 2', 'nothing to show 2', 500, 1000.3, 20, 15, '2025-08-10', 1, 1, 1)
+insert into product ( product_name, "description", cost_price, sell_price, quantity, supplier_id, category_id, "status" )
+values ( 'Product 1', 'nothing to show', 1000.5, 2000.3, 80, 1, 1, 1)
+insert into product ( product_name, "description", cost_price, sell_price, quantity, supplier_id, category_id, "status" )
+values ( 'Product 2', 'nothing to show 2', 500, 1000.3, 20, 1, 1, 1)
 
 -- 6. ACCOUNT
 insert into account ( username, "password", email, phone, "address", account_image, role_id, dob, "status")

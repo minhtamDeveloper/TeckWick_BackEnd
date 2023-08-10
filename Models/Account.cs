@@ -7,6 +7,8 @@ public partial class Account
 {
     public int Id { get; set; }
 
+    public string? Fullname { get; set; }
+
     public string? Username { get; set; }
 
     public string? Password { get; set; }
@@ -26,8 +28,6 @@ public partial class Account
     public DateTime? Dob { get; set; }
 
     public bool? Status { get; set; }
-
-    public string? Fullname { get; set; }
 
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
