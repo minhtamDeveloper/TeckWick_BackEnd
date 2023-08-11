@@ -35,6 +35,7 @@ public class UserController : ControllerBase
             }
             else
             {   var hashpassword = BCrypt.Net.BCrypt.HashPassword(account.Password);
+                account.AccountImage = "user.png";
                 account.Password = hashpassword;
                 account.Created = DateTime.Now;
                 account.Status = false;
