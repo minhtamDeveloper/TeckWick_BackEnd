@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PlantNestBackEnd.Helplers;
 using PlantNestBackEnd.Models;
 using System.Diagnostics;
 
@@ -8,21 +9,33 @@ public class UserImpl : IUser
 {
     private DatabaseContext db;
     private IConfiguration configuration;
-    public UserImpl(DatabaseContext db, IConfiguration configuration) {
+    public UserImpl(DatabaseContext db, IConfiguration configuration)
+    {
         this.db = db;
         this.configuration = configuration;
     }
-    public Task<bool> changePassword(string id, string newPass)
+    public bool changePassword(string id, string newPass)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var account = db.Accounts.Find(id);
+            account.Password = newPass;
+            db.Entry(account).State = EntityState.Modified;
+            return db.SaveChanges() > 0;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex);
+            return false;
+        }
     }
 
-    public async Task<bool> create(Account account)
+    public bool create(Account account)
     {
         try
         {
             db.Accounts.Add(account);
-            return (await db.SaveChangesAsync()) > 0;
+            return db.SaveChanges() > 0;
         }
         catch (Exception ex)
         {
@@ -31,12 +44,19 @@ public class UserImpl : IUser
         }
     }
 
-    public async Task<bool> delete(int id)
+    public Account dataLoginSuccessful(string username)
+    {
+        var data = new Account();
+        var find = db.Accounts.Where(a => a.Username == username).SingleOrDefault();
+        return find;
+    }
+
+    public bool delete(int id)
     {
         try
         {
             db.Accounts.Remove(db.Accounts.Find(id));
-            return (await db.SaveChangesAsync()) > 0;
+            return db.SaveChanges()>0;
         }
         catch (Exception ex)
         {
@@ -45,11 +65,11 @@ public class UserImpl : IUser
         }
     }
 
-    public async Task<bool> existEmail(string email)
+    public bool existEmail(string email)
     {
         try
         {
-            return (await db.Accounts.Where(a => a.Email == email).CountAsync()) > 0;
+            return db.Accounts.Where(a => a.Email == email).Count() > 0;
         }
         catch (Exception ex)
         {
@@ -58,11 +78,11 @@ public class UserImpl : IUser
         }
     }
 
-    public async Task<bool> existUserName(string username)
+    public bool existUserName(string username)
     {
         try
         {
-            return (await db.Accounts.Where(a => a.Username == username).CountAsync()) > 0;
+            return db.Accounts.Where(a => a.Username == username).Count() > 0;
         }
         catch (Exception ex)
         {
@@ -71,37 +91,11 @@ public class UserImpl : IUser
         }
     }
 
-    public async Task<dynamic> findAll()
+    public dynamic findAll()
     {
         try
         {
-            return (await db.Accounts.Select(a=> new
-            {
-                id = a.Id,
-                fullName = a.Fullname,
-                userName = a.Username, 
-                email = a.Email,
-                phone = a.Phone,
-                address = a.Address,
-                accountImage = a.AccountImage,
-                roleId = a.RoleId,
-                roleName = a.Role.RoleName,
-                created = a.Created,
-                dob = a.Dob
-            }).ToListAsync());
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine(ex);
-            return false;
-        }
-    }
-
-    public async Task<dynamic> findByID(int id)
-    {
-        try
-        {
-            return (await db.Accounts.Where(a=>a.Id == id).Select(a => new
+            return db.Accounts.Select(a => new
             {
                 id = a.Id,
                 fullName = a.Fullname,
@@ -114,7 +108,7 @@ public class UserImpl : IUser
                 roleName = a.Role.RoleName,
                 created = a.Created,
                 dob = a.Dob
-            }).SingleOrDefaultAsync());
+            }).ToList();
         }
         catch (Exception ex)
         {
@@ -123,11 +117,16 @@ public class UserImpl : IUser
         }
     }
 
-    public async Task<dynamic> findByUserName(string username)
+    public dynamic findByEmail(string email)
+    {
+        throw new NotImplementedException();
+    }
+
+    public dynamic findByID(int id)
     {
         try
         {
-            return (await db.Accounts.Where(a => a.Username == username).Select(a => new
+            return db.Accounts.Where(a => a.Id == id).Select(a => new
             {
                 id = a.Id,
                 fullName = a.Fullname,
@@ -140,7 +139,7 @@ public class UserImpl : IUser
                 roleName = a.Role.RoleName,
                 created = a.Created,
                 dob = a.Dob
-            }).SingleOrDefaultAsync());
+            }).SingleOrDefault();
         }
         catch (Exception ex)
         {
@@ -149,19 +148,53 @@ public class UserImpl : IUser
         }
     }
 
-    public async Task<bool> login(string userName, string password)
+    public dynamic findByUserName(string username)
     {
         try
         {
-            var data = db.Accounts.Where(a=>a.Username == userName).SingleOrDefault();
-            if (BCrypt.Net.BCrypt.Verify(password, data.Password))
+            return db.Accounts.Where(a => a.Username == username).Select(a => new
             {
-                return  true;
+                id = a.Id,
+                fullName = a.Fullname,
+                userName = a.Username,
+                email = a.Email,
+                phone = a.Phone,
+                address = a.Address,
+                accountImage = a.AccountImage,
+                roleId = a.RoleId,
+                roleName = a.Role.RoleName,
+                created = a.Created.Value.ToString("dd-MM-yyyy"),
+                dob = a.Dob.Value.ToString("dd-MM-yyyy")
+            }).SingleOrDefault();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex);
+            return false;
+        }
+    }
+
+    public bool login(string userName, string password)
+    {
+        try
+        {
+            var data = db.Accounts.Where(a => a.Username == userName).SingleOrDefault();
+            if(data!=null)
+            {
+                if (BCrypt.Net.BCrypt.Verify(password, data.Password))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
-                return  false;
+                return false;
             }
+            
         }
         catch (Exception ex)
         {
@@ -170,17 +203,48 @@ public class UserImpl : IUser
         }
     }
 
-    public async Task<bool> sendCode(string username)
+    public bool sendCode(string email)
     {
-        return false;
+        try
+        {
+            if (db.Accounts.Where(a => a.Email == email).Count() > 0)
+            {
+                var mailHelper = new MailHelper(configuration);
+                var codeRandom = RandomHelper.RandomInt(6);
+                var content = "<h4>Please preserve the subject! This is important for correct mail handling.</h4>"
+                               + "<h3>Dear customer</h3>"
+                               + "<h5>In order to continue your registrations with Somee International please use the following validation code: </h5>"
+                               + "<h2>" + codeRandom + "</h2>"
+                               + "<h4>Regards</h4>";
+                var check = mailHelper.Send(configuration["Gmail:Username"], email, "Re:{Plant Nest} Email verification", content);
+                if (check)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex);
+            return false;
+        }
     }
 
-    public async Task<bool> update(Account account)
+    public bool update(Account account)
     {
         try
         {
             db.Entry(account).State = EntityState.Modified;
-            return (await db.SaveChangesAsync()) > 0;
+            return db.SaveChanges() > 0;
         }
         catch (Exception ex)
         {
@@ -189,19 +253,16 @@ public class UserImpl : IUser
         }
     }
 
-    public async Task<bool> verify(string email, string code)
+    public bool verify(string email, string code)
     {
         try
         {
-            //var data = db.Accounts.Where(a => a.Email == email).SingleOrDefault();
-            //if (code == data.se))
-            //{
+            var data = db.Accounts.Where(a => a.Email == email).SingleOrDefault();
+            if (data.SercurityCode == code)
+            {
                 return true;
-            //}
-            //else
-            //{
-            //    return false;
-            //}
+            }
+            else { return false; }
         }
         catch (Exception ex)
         {

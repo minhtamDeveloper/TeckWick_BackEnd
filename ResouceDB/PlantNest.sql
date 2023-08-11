@@ -26,6 +26,9 @@ create table account
 )
 go
 
+alter table account
+add sercurityCode varchar(20)
+
 
 drop table if exists "role"
 create table "role"

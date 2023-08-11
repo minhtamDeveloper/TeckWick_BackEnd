@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using PlantNestBackEnd.Models;
+using PlantNestBackEnd.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
@@ -10,28 +12,45 @@ using System.Text;
 
 namespace PlantNestBackEnd.Controllers;
 [Route("api/[controller]")]
-[ApiController]
 public class LoginController : ControllerBase
 {
-    private static Account account = new Account();
     private IConfiguration configuration;
-    public LoginController(IConfiguration configuration) { 
-        this.configuration = configuration; 
+    private IUser userService;
+    public LoginController(IConfiguration configuration, IUser userService) { 
+        this.configuration = configuration;
+        this.userService= userService;
     }
 
     [Produces("application/json")]
-    [Consumes("application/json")]
+    [Consumes("multipart/form-data")]
     [HttpPost("login")]
-    public IActionResult login(Account account)
+    public  IActionResult login(string data)
     {
-        ;
-        return Ok(CreateToken(account.Username, account.Username, account.Username));
+        var dataClient = JsonConvert.DeserializeObject<Account>(data);
+
+        try
+        {
+
+            if (userService.login(dataClient.Username, dataClient.Password))
+            {
+                var dataReturn = userService.dataLoginSuccessful(dataClient.Username);
+                return Ok(CreateToken(dataReturn.Id.ToString(), dataReturn.Username, dataReturn.Role.RoleName));
+            }
+            else
+            {
+                return BadRequest("Login Fail");
+            }
+        }catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+        
     }
-    private string CreateToken(string username,string name, string role)
+    private string CreateToken(string id,string name, string role)
     {
         List<Claim> claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier,username),
+            new Claim(ClaimTypes.NameIdentifier,id),
             new Claim(ClaimTypes.Name,name),
             new Claim(ClaimTypes.Role,role)
         };

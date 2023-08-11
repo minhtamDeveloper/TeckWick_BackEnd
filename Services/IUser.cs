@@ -4,16 +4,18 @@ namespace PlantNestBackEnd.Services;
 
 public interface IUser
 {
-    Task<dynamic> findAll();
-    Task<dynamic> findByID(int id);
-    Task<dynamic> findByUserName(string username);
-    Task<bool> create(Account account);
-    Task<bool> update(Account account);
-    Task<bool> delete(int id);
-    Task<bool> existUserName(string username);
-    Task<bool> existEmail(string email);
-    Task<bool> sendCode(string username);
-    Task<bool> login(string userName, string password);
-    Task<bool> verify(string email,string code);
-    Task<bool> changePassword(string id, string newPass);
+    dynamic findAll();
+    dynamic findByID(int id);
+    Account dataLoginSuccessful(string username);
+    dynamic findByUserName(string username);
+    dynamic findByEmail(string email);
+    bool create(Account account);
+    bool update(Account account);
+   bool delete(int id);
+    bool existUserName(string username);
+    bool existEmail(string email);
+     bool sendCode(string username);
+     bool login(string userName, string password);
+     bool verify(string email,string code);
+     bool changePassword(string id, string newPass);
 }
