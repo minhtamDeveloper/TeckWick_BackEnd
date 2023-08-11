@@ -3,6 +3,7 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 appsettings.Development.json
+
 # User-specific files
 *.rsuser
 *.suo
@@ -475,3 +476,12 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Ignore all image files
+*.jpg
+*.png
+*.gif
+*.svg
+*.bmp
+*.ico
+*.jpeg
