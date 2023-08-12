@@ -23,6 +23,9 @@ public class CategoryController : ControllerBase
     [HttpGet("getAll")]
     public async Task<IActionResult> getAll()
     {
+
+        
+
        var a = await _databaseContext.Categories.AsNoTracking().Select(a=>new
         {
             a.Id ,
@@ -123,11 +126,19 @@ public class CategoryController : ControllerBase
                         {
                             var filePath1 = Path.Combine(_webHostEnvironment.WebRootPath, dbCategory.CategoryImage );
                             using var stream = new FileStream(filePath1, FileMode.Open);
-                            stream.Close();
+                          
 
                             stream.Dispose();
-                   
+                            try
+                            {
+                                   System.IO.File.Delete(filePath1);
+                            }
+                            catch (Exception)
+                            {
 
+                       
+                            }
+                          
                         }
                 var fileName = GenerateRandomString(10);
                 fileName = Path.Combine("category", fileName + Path.GetExtension(file.FileName));
