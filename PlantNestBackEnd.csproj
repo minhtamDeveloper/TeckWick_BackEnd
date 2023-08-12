@@ -29,6 +29,8 @@
 
   <ItemGroup>
     <Folder Include="ResouceDB\" />
+    <Folder Include="wwwroot\img-profile\" />
+    <Folder Include="wwwroot\product\" />
   </ItemGroup>
 
 </Project>

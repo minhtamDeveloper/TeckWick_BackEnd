@@ -10,8 +10,9 @@ public interface IUser
     dynamic findByUserName(string username);
     dynamic findByEmail(string email);
     bool create(Account account);
-    bool update(Account account);
-   bool delete(int id);
+    bool update(int id , Account account);
+    bool updateAvt(int id, string nameImg);
+    bool delete(int id);
     bool existUserName(string username);
     bool existEmail(string email);
      bool sendCode(string username);

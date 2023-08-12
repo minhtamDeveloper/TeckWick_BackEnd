@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using PlantNest.Services;
 using PlantNestBackEnd.Converter;
 using PlantNestBackEnd.Models;
 using PlantNestBackEnd.Services;
@@ -32,9 +33,17 @@ builder.Services.AddSwaggerGen(option =>
     //});
     //option.OperationFilter<SecurityRequirementsOperationFilter>();
 });
-builder.Services.AddScoped<IProduct, ProductImpl>();
 builder.Services.AddScoped<ICategory, CategoryImpl>();
 builder.Services.AddScoped<IUser, UserImpl>();
+builder.Services.AddScoped<IProduct, ProductImpl>();
+builder.Services.AddScoped<ICarts, CartImpl>();
+builder.Services.AddScoped<IFavoriteCart, FavoriteCartImpl>();
+builder.Services.AddScoped<IOrder, OrderImpl>();
+builder.Services.AddScoped<IOrderDetail, OrderDetailImpl>();
+builder.Services.AddScoped<IAccount, AccountImpl>();
+builder.Services.AddScoped<ISupplier, SupplierImpl>();
+builder.Services.AddScoped<IProduct, ProductImpl>();
+builder.Services.AddScoped<IImage, ImageImpl>();
 builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

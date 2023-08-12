@@ -43,17 +43,13 @@ public partial class DatabaseContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=DNGUYXNTUANANH;Database=PlantNestDB;user id=sa;password=0335167226aA;trusted_connection=true;encrypt=false");
+        => optionsBuilder.UseSqlServer("Server=LAPTOP-PV86VKQR\\SQLEXPRESS;Database=PlantNestDB;user id=sa;password=112233;trusted_connection=true;encrypt=false");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Account>(entity =>
         {
-<<<<<<< HEAD
             entity.HasKey(e => e.Id).HasName("PK__account__3213E83F00B0DDE1");
-=======
-            entity.HasKey(e => e.Id).HasName("PK__account__3213E83F6D8888EB");
->>>>>>> 105dc2352866507a1ef1c9d019512ef0208de150
 
             entity.ToTable("account");
 
@@ -75,6 +71,10 @@ public partial class DatabaseContext : DbContext
                 .HasMaxLength(250)
                 .IsUnicode(false)
                 .HasColumnName("email");
+            entity.Property(e => e.Fullname)
+                .HasMaxLength(250)
+                .IsUnicode(false)
+                .HasColumnName("fullname");
             entity.Property(e => e.Password)
                 .HasMaxLength(250)
                 .IsUnicode(false)
@@ -101,11 +101,7 @@ public partial class DatabaseContext : DbContext
 
         modelBuilder.Entity<Cart>(entity =>
         {
-<<<<<<< HEAD
             entity.HasKey(e => e.Id).HasName("PK__cart__3213E83FB7A884B6");
-=======
-            entity.HasKey(e => e.Id).HasName("PK__cart__3213E83F699F73CB");
->>>>>>> 105dc2352866507a1ef1c9d019512ef0208de150
 
             entity.ToTable("cart");
 
@@ -124,11 +120,7 @@ public partial class DatabaseContext : DbContext
 
         modelBuilder.Entity<Category>(entity =>
         {
-<<<<<<< HEAD
             entity.HasKey(e => e.Id).HasName("PK__category__3213E83F01300EFA");
-=======
-            entity.HasKey(e => e.Id).HasName("PK__category__3213E83F5C6D9503");
->>>>>>> 105dc2352866507a1ef1c9d019512ef0208de150
 
             entity.ToTable("category");
 
@@ -154,11 +146,7 @@ public partial class DatabaseContext : DbContext
 
         modelBuilder.Entity<Comment>(entity =>
         {
-<<<<<<< HEAD
             entity.HasKey(e => e.Id).HasName("PK__comment__3213E83F25ABCA18");
-=======
-            entity.HasKey(e => e.Id).HasName("PK__comment__3213E83FFA3C95C2");
->>>>>>> 105dc2352866507a1ef1c9d019512ef0208de150
 
             entity.ToTable("comment");
 
@@ -181,11 +169,7 @@ public partial class DatabaseContext : DbContext
 
         modelBuilder.Entity<Contact>(entity =>
         {
-<<<<<<< HEAD
             entity.HasKey(e => e.Id).HasName("PK__contact__3213E83F8D06CF42");
-=======
-            entity.HasKey(e => e.Id).HasName("PK__contact__3213E83FED0DA462");
->>>>>>> 105dc2352866507a1ef1c9d019512ef0208de150
 
             entity.ToTable("contact");
 
@@ -213,11 +197,7 @@ public partial class DatabaseContext : DbContext
 
         modelBuilder.Entity<Delivery>(entity =>
         {
-<<<<<<< HEAD
             entity.HasKey(e => e.Id).HasName("PK__delivery__3213E83F79CF5C21");
-=======
-            entity.HasKey(e => e.Id).HasName("PK__delivery__3213E83F3D3FDC64");
->>>>>>> 105dc2352866507a1ef1c9d019512ef0208de150
 
             entity.ToTable("delivery");
 
@@ -256,11 +236,7 @@ public partial class DatabaseContext : DbContext
 
         modelBuilder.Entity<FavoriteCart>(entity =>
         {
-<<<<<<< HEAD
             entity.HasKey(e => e.Id).HasName("PK__favorite__3213E83FFFF41E57");
-=======
-            entity.HasKey(e => e.Id).HasName("PK__favorite__3213E83F5A0EBA27");
->>>>>>> 105dc2352866507a1ef1c9d019512ef0208de150
 
             entity.ToTable("favoriteCart");
 
@@ -275,11 +251,7 @@ public partial class DatabaseContext : DbContext
 
         modelBuilder.Entity<Image>(entity =>
         {
-<<<<<<< HEAD
             entity.HasKey(e => e.Id).HasName("PK__image__3213E83F6EDF4317");
-=======
-            entity.HasKey(e => e.Id).HasName("PK__image__3213E83FF9AC8EA9");
->>>>>>> 105dc2352866507a1ef1c9d019512ef0208de150
 
             entity.ToTable("image");
 
@@ -296,11 +268,7 @@ public partial class DatabaseContext : DbContext
 
         modelBuilder.Entity<Order>(entity =>
         {
-<<<<<<< HEAD
             entity.HasKey(e => e.Id).HasName("PK__order__3213E83FCA01C699");
-=======
-            entity.HasKey(e => e.Id).HasName("PK__order__3213E83FA8EE29F3");
->>>>>>> 105dc2352866507a1ef1c9d019512ef0208de150
 
             entity.ToTable("order");
 
@@ -332,11 +300,7 @@ public partial class DatabaseContext : DbContext
 
         modelBuilder.Entity<OrderDetail>(entity =>
         {
-<<<<<<< HEAD
             entity.HasKey(e => new { e.OrderId, e.ProductId }).HasName("PK__orderDet__022945F64976148A");
-=======
-            entity.HasKey(e => new { e.OrderId, e.ProductId }).HasName("PK__orderDet__022945F6AB961A7C");
->>>>>>> 105dc2352866507a1ef1c9d019512ef0208de150
 
             entity.ToTable("orderDetail");
 
@@ -365,11 +329,7 @@ public partial class DatabaseContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-<<<<<<< HEAD
             entity.HasKey(e => e.Id).HasName("PK__product__3213E83FF9D86EBF");
-=======
-            entity.HasKey(e => e.Id).HasName("PK__product__3213E83F2F84D572");
->>>>>>> 105dc2352866507a1ef1c9d019512ef0208de150
 
             entity.ToTable("product");
 
@@ -407,11 +367,7 @@ public partial class DatabaseContext : DbContext
 
         modelBuilder.Entity<Role>(entity =>
         {
-<<<<<<< HEAD
             entity.HasKey(e => e.Id).HasName("PK__role__3213E83F69825B13");
-=======
-            entity.HasKey(e => e.Id).HasName("PK__role__3213E83F1991A6BF");
->>>>>>> 105dc2352866507a1ef1c9d019512ef0208de150
 
             entity.ToTable("role");
 
@@ -431,11 +387,7 @@ public partial class DatabaseContext : DbContext
 
         modelBuilder.Entity<Supplier>(entity =>
         {
-<<<<<<< HEAD
             entity.HasKey(e => e.Id).HasName("PK__supplier__3213E83FED92903D");
-=======
-            entity.HasKey(e => e.Id).HasName("PK__supplier__3213E83F370017A3");
->>>>>>> 105dc2352866507a1ef1c9d019512ef0208de150
 
             entity.ToTable("supplier");
 

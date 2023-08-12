@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using PlantNestBackEnd.Helplers;
 using PlantNestBackEnd.Models;
 using System.Diagnostics;
@@ -9,16 +10,18 @@ public class UserImpl : IUser
 {
     private DatabaseContext db;
     private IConfiguration configuration;
-    public UserImpl(DatabaseContext db, IConfiguration configuration)
+    private IWebHostEnvironment webHostEnvironment;
+    public UserImpl(DatabaseContext db, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
     {
         this.db = db;
         this.configuration = configuration;
+        this.webHostEnvironment = webHostEnvironment;
     }
-    public bool changePassword(string id, string newPass)
+    public bool changePassword(string email, string newPass)
     {
         try
         {
-            var account = db.Accounts.Find(id);
+            var account = db.Accounts.Where(a=>a.Email == email).AsNoTracking().SingleOrDefault();
             account.Password = newPass;
             db.Entry(account).State = EntityState.Modified;
             return db.SaveChanges() > 0;
@@ -47,7 +50,7 @@ public class UserImpl : IUser
     public Account dataLoginSuccessful(string username)
     {
         var data = new Account();
-        var find = db.Accounts.Where(a => a.Username == username).SingleOrDefault();
+        var find = db.Accounts.Where(a => a.Username == username || a.Email ==username).SingleOrDefault();
         return find;
     }
 
@@ -56,7 +59,7 @@ public class UserImpl : IUser
         try
         {
             db.Accounts.Remove(db.Accounts.Find(id));
-            return db.SaveChanges()>0;
+            return db.SaveChanges() > 0;
         }
         catch (Exception ex)
         {
@@ -134,7 +137,7 @@ public class UserImpl : IUser
                 email = a.Email,
                 phone = a.Phone,
                 address = a.Address,
-                accountImage =  a.AccountImage,
+                accountImage = configuration["BaseUrl"] + "img-profile/" + a.AccountImage,
                 roleId = a.RoleId,
                 roleName = a.Role.RoleName,
                 created = a.Created,
@@ -160,7 +163,7 @@ public class UserImpl : IUser
                 email = a.Email,
                 phone = a.Phone,
                 address = a.Address,
-                accountImage = configuration["BaseUrl"] +"img-profile/"+a.AccountImage,
+                accountImage = configuration["BaseUrl"] + "img-profile/" + a.AccountImage,
                 roleId = a.RoleId,
                 roleName = a.Role.RoleName,
                 created = a.Created.Value.ToString("dd-MM-yyyy"),
@@ -178,8 +181,8 @@ public class UserImpl : IUser
     {
         try
         {
-            var data = db.Accounts.Where(a => a.Username == userName).SingleOrDefault();
-            if(data!=null)
+            var data = db.Accounts.Where(a => a.Username == userName || a.Email ==userName).SingleOrDefault();
+            if (data != null)
             {
                 if (BCrypt.Net.BCrypt.Verify(password, data.Password))
                 {
@@ -194,7 +197,7 @@ public class UserImpl : IUser
             {
                 return false;
             }
-            
+
         }
         catch (Exception ex)
         {
@@ -207,7 +210,7 @@ public class UserImpl : IUser
     {
         try
         {
-            if (db.Accounts.Where(a => a.Email == email).Count() > 0)
+            if (db.Accounts.Where(a => a.Email == email).AsNoTracking().Count() > 0)
             {
                 var mailHelper = new MailHelper(configuration);
                 var codeRandom = RandomHelper.RandomInt(6);
@@ -217,8 +220,13 @@ public class UserImpl : IUser
                                + "<h2>" + codeRandom + "</h2>"
                                + "<h4>Regards</h4>";
                 var check = mailHelper.Send(configuration["Gmail:Username"], email, "Re:{Plant Nest} Email verification", content);
+                var data = db.Accounts.Where(a => a.Email == email).AsNoTracking().SingleOrDefault();
+                data.SercurityCode = codeRandom;
+                
                 if (check)
                 {
+                    db.Entry(data).State = EntityState.Modified;
+                     db.SaveChanges() ;
                     return true;
                 }
                 else
@@ -239,12 +247,40 @@ public class UserImpl : IUser
         }
     }
 
-    public bool update(Account account)
+    public bool update(int id, Account account)
     {
         try
         {
-            db.Entry(account).State = EntityState.Modified;
-            return db.SaveChanges() > 0;
+            var data = db.Accounts.Find(id);
+            if (data.Email != account.Email)
+            {
+                if (existEmail(account.Email))
+                {
+                    return false;
+                }
+                else
+                {
+                    data.Fullname = account.Fullname;
+                    data.Email = account.Email;
+                    data.Address = account.Address;
+                    data.Phone = account.Phone;
+                    db.Entry(data).State = EntityState.Modified;
+                    return db.SaveChanges() > 0;
+                }
+            }
+            else
+            {
+
+                data.Fullname = account.Fullname;
+                data.Email = account.Email;
+                data.Address = account.Address;
+                data.Phone = account.Phone;
+                db.Entry(data).State = EntityState.Modified;
+                return db.SaveChanges() > 0;
+
+            }
+
+
         }
         catch (Exception ex)
         {
@@ -258,8 +294,11 @@ public class UserImpl : IUser
         try
         {
             var data = db.Accounts.Where(a => a.Email == email).SingleOrDefault();
-            if (data.SercurityCode == code)
+            if (data!=null && data.SercurityCode == code)
             {
+                data.SercurityCode = null;
+                db.Entry(data).State = EntityState.Modified;
+                 db.SaveChanges();
                 return true;
             }
             else { return false; }
@@ -270,4 +309,38 @@ public class UserImpl : IUser
             return false;
         }
     }
+
+    public bool updateAvt(int id, string nameImg)
+    {
+        try
+        {
+
+            var data = db.Accounts.Find(id);
+            if (data.AccountImage != "user.jpg")
+            {
+                var path = Path.Combine(webHostEnvironment.WebRootPath, "img-profile", data.AccountImage);
+                // string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "myfile.txt");
+                File.Delete(path);
+                data.AccountImage = nameImg;
+                db.Entry(data).State = EntityState.Modified;
+                return db.SaveChanges() > 0;
+            }
+            else
+            {
+                data.AccountImage = nameImg;
+                db.Entry(data).State = EntityState.Modified;
+                return db.SaveChanges() > 0;
+            }
+
+
+
+
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine(ex);
+            return false;
+        }
+    }
+
 }

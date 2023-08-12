@@ -1,5 +1,11 @@
-﻿namespace PlantNestBackEnd.Services;
+﻿using PlantNestBackEnd.Models;
 
-public interface iAccount
+namespace PlantNestBackEnd.Services;
+
+public interface IAccount
 {
+    public dynamic showAll();
+   
+    public dynamic Search(string keyword);
+
 }

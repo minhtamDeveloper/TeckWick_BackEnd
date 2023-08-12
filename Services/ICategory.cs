@@ -9,5 +9,4 @@ public interface ICategory
     Task<bool> create(Category category);
     Task<bool> update(Category category);
     Task<bool> delete(int id);
-    Task<bool> exist(int id);
 }

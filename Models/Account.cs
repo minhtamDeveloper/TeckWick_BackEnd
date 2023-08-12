@@ -29,11 +29,8 @@ public partial class Account
 
     public bool? Status { get; set; }
 
-<<<<<<< HEAD
     public string? SercurityCode { get; set; }
 
-=======
->>>>>>> 105dc2352866507a1ef1c9d019512ef0208de150
     public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
 
     public virtual ICollection<FavoriteCart> FavoriteCarts { get; set; } = new List<FavoriteCart>();
