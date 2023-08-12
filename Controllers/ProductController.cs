@@ -1,4 +1,5 @@
 ﻿using Castle.Components.DictionaryAdapter.Xml;
+using Castle.Core.Configuration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -131,7 +132,7 @@ public class ProductController : ControllerBase
                     
                    
                                 var  fileName = GenerateRandomString(10);
-                                    fileName = Path.Combine("product","indexVui"+fileName+Path.GetExtension(file.FileName));
+                                    fileName = Path.Combine("product","index"+fileName+Path.GetExtension(file.FileName));
                      
                                   var filePath = Path.Combine(_webHostEnvironment.WebRootPath, fileName);
                                 using var fileStream = new FileStream(filePath, FileMode.Create);
@@ -174,15 +175,33 @@ public class ProductController : ControllerBase
               if(fileSide!=null && fileSide.Count > 0)
             {
                 var number = 0 ;
-                
+                var deleteImage = dbProduct.Images.Where(img=>!img.ImageUrl.Contains("index")).ToList() ;
+                deleteImage.ForEach(img =>
+                {
+                       try
+                    {
+                         var filePath1 = Path.Combine(_webHostEnvironment.WebRootPath,img.ImageUrl );
+
+                        using var stream = new FileStream(filePath1, FileMode.Open);
+                        stream.Dispose();
+                        System.IO.File.Delete(filePath1);
+
+                    }
+                    catch (Exception)
+                    {
+
+                        
+                    }
+                });
+
                 dbProduct.Images = dbProduct.Images.Where(img=>img.ImageUrl.Contains("index")).ToList() ;
-              
+                _databaseContext.Images.RemoveRange(deleteImage);
              
                
                 fileSide.ForEach(fileA =>
                 {
                      var  fileName = GenerateRandomString(10);
-                        fileName = Path.Combine("product","123"+fileName+Path.GetExtension(fileA.FileName));
+                        fileName = Path.Combine("product",fileName+Path.GetExtension(fileA.FileName));
                      
                       var filePath = Path.Combine(_webHostEnvironment.WebRootPath, fileName);
                     using var fileStream = new FileStream(filePath, FileMode.Create);
