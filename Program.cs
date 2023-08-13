@@ -15,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var stringConnection = builder.Configuration["ConnectionStrings:Default"];
-builder.Services.AddDbContext<DatabaseContext>(option =>option.UseLazyLoadingProxies().UseSqlServer(stringConnection));
+builder.Services.AddDbContext<DatabaseContext>(option => option.UseLazyLoadingProxies().UseSqlServer(stringConnection));
 builder.Services.AddControllers().AddJsonOptions(option =>
 {
     option.JsonSerializerOptions.Converters.Add(new DateConverter());
@@ -44,6 +44,10 @@ builder.Services.AddScoped<IAccount, AccountImpl>();
 builder.Services.AddScoped<ISupplier, SupplierImpl>();
 builder.Services.AddScoped<IProduct, ProductImpl>();
 builder.Services.AddScoped<IImage, ImageImpl>();
+builder.Services.AddScoped<iContact, contactImpl>();
+builder.Services.AddScoped<IFavoriteCart, FavoriteCartImpl>();
+builder.Services.AddScoped<IDelivery, DeliveryImpl>();
+
 builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -69,7 +73,13 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(
+
+    //{
+    //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Plant Nest");
+    //    c.RoutePrefix = string.Empty;
+    //}
+      );
 }
 app.UseStaticFiles();
 

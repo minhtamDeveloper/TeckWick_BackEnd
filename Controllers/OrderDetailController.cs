@@ -1,46 +1,34 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+using Microsoft.AspNetCore.Mvc;
+using PlantNestBackEnd.Models;
 using PlantNestBackEnd.Services;
 
-namespace PlantNestBackEnd.Controllers
+namespace DemoOnlineFloralDelivery.Controllers;
+[Route("api/orderDetail")]
+public class OrderDetailController : ControllerBase
 {
-    [Route("api/[controller]")]
-    public class OrderDetailController : Controller
+    private IOrderDetail orderDetailService;
+
+    public OrderDetailController(IOrderDetail _orderDetailService)
     {
-        private IOrderDetail orderDetailService;
-        public OrderDetailController(IOrderDetail _orderDetailService)
-        {
-            this.orderDetailService = _orderDetailService;
-        }
-        [Produces("application/json")]
-        [Consumes("application/json")]
-        [HttpGet("findByIdOrder/{id}")]
-        public IActionResult FindAll(int id)
-        {
+        orderDetailService = _orderDetailService;
 
-            try
-            {
-                return Ok(orderDetailService.findByIdOrder(id));
-            }
-            catch
-            {
-                return BadRequest();
-            }
-        }
-        [Produces("application/json")]
-        [Consumes("application/json")]
-        [HttpGet("findAll")]
-        public IActionResult FindAll()
+    }
+    [Consumes("application/json")]
+    [Produces("application/json")]
+    [HttpPost("created")]
+    public IActionResult Created([FromBody] List<OrderDetail> orderDetails)
+    {
+        try
         {
-
-            try
+            return Ok(new
             {
-                return Ok(orderDetailService.findAll());
-            }
-            catch
-            {
-                return BadRequest();
-            }
+                status = orderDetailService.created(orderDetails)
+            });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message); // Trả về thông tin lỗi cụ thể
         }
     }
 }
-

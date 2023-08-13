@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="Google.Apis.FirebaseHosting.v1" Version="1.61.0.3141" />
+    <PackageReference Include="Microsoft.AspNet.WebApi" Version="5.2.9" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.10" />
@@ -30,6 +32,8 @@
   <ItemGroup>
     <Folder Include="ResouceDB\" />
     <Folder Include="wwwroot\img-profile\" />
+    <Folder Include="wwwroot\images\" />
+    <Folder Include="wwwroot\categories\" />
     <Folder Include="wwwroot\product\" />
   </ItemGroup>
 

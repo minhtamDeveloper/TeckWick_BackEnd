@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using PlantNestBackEnd.Helplers;
 using PlantNestBackEnd.Models;
 using PlantNestBackEnd.Services;
 
@@ -261,7 +262,7 @@ public class ProductController : ControllerBase
             if (product == null) return NotFound("Can  not  Get  Product!");
             if (file != null)
             {
-                var fileName = GenerateRandomString(10);
+                var fileName = RandomHelper.RandomString(10);
                 fileName = Path.Combine("product", "index" + fileName + Path.GetExtension(file.FileName));
 
                 var filePath = Path.Combine(_webHostEnvironment.WebRootPath, fileName);
@@ -280,7 +281,7 @@ public class ProductController : ControllerBase
             {
                 fileSide.ForEach(fileA =>
                 {
-                    var fileName = GenerateRandomString(10);
+                    var fileName = RandomHelper.RandomString(10);
                     fileName = Path.Combine("product", fileName + Path.GetExtension(fileA.FileName));
 
                     var filePath = Path.Combine(_webHostEnvironment.WebRootPath, fileName);
@@ -330,7 +331,7 @@ public class ProductController : ControllerBase
                 var ab = dbProduct.Images.Where(img => img.ImageUrl.Contains("index")).FirstOrDefault();
 
 
-                var fileName = GenerateRandomString(10);
+                var fileName = RandomHelper.RandomString(10);
                 fileName = Path.Combine("product", "index" + fileName + Path.GetExtension(file.FileName));
 
                 var filePath = Path.Combine(_webHostEnvironment.WebRootPath, fileName);
@@ -399,7 +400,7 @@ public class ProductController : ControllerBase
 
                 fileSide.ForEach(fileA =>
                 {
-                    var fileName = GenerateRandomString(10);
+                    var fileName = RandomHelper.RandomString(10);
                     fileName = Path.Combine("product", fileName + Path.GetExtension(fileA.FileName));
 
                     var filePath = Path.Combine(_webHostEnvironment.WebRootPath, fileName);
@@ -446,12 +447,12 @@ public class ProductController : ControllerBase
 
 
     }
-    public string GenerateRandomString(int length)
-    {
-        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        var random = new Random();
-        return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
-    }
+    //public string GenerateRandomString(int length)
+    //{
+    //    const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    //    var random = new Random();
+    //    return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
+    //}
     [HttpGet("Thang/byId/{id}")]
     public async Task<IActionResult> getByIdUPdate(int id)
     {

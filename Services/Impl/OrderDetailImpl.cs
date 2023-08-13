@@ -62,5 +62,17 @@ namespace PlantNestBackEnd.Services.Impl
                 return false;
             }
         }
+        public bool created(List<OrderDetail> orderDetails)
+        {
+            try
+            {
+                db.OrderDetails.AddRange(orderDetails);
+                return db.SaveChanges() > 0;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error creating order details: " + ex.Message);
+            }
+        }
     }
 }

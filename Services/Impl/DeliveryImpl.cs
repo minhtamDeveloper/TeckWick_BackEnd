@@ -1,37 +1,94 @@
 ﻿using PlantNestBackEnd.Models;
-using System.Diagnostics;
 
-namespace PlantNestBackEnd.Services.Impl
+namespace PlantNestBackEnd.Services.Impl;
+
+public class DeliveryImpl : IDelivery
 {
-    public class DeliveryImpl : IDelivery
+    private DatabaseContext db;
+    private IConfiguration configuration;
+    public DeliveryImpl(DatabaseContext _db, IConfiguration _configuration)
     {
-        private DatabaseContext db;
-        private IConfiguration configuration;
-        public DeliveryImpl(DatabaseContext db, IConfiguration _configuration) { this.db = db; configuration = _configuration; }
-        public async Task<dynamic> findByIdOrder(int idOrder)
-        {
-            try
-            {
-                return db.Deliveries.Where(p => p.OrderId == idOrder).Select(p => new
-                {
-                    Id = p.OrderId,
-                    OrderId = p.OrderId,
-                    DeliveryDate = p.DeliveryDate,
-                    ReceivingDate = p.ReceivingDate,
-                    RecipientName =     p.RecipientName,
-                    RecipientAddress =  p.RecipientAddress,
-                    RecipientPhone  = p.RecipientPhone,
-                    Message =   p.Message,
-                    Status  = p.Status,
+        db = _db;
+        configuration = _configuration;
+    }
 
-                }).OrderByDescending(p => p.OrderId).FirstOrDefault();
-            }
-            catch (Exception ex)
+    public bool created(Delivery delivery)
+    {
+        try
+        {
+            db.Deliveries.Add(delivery);
+            return db.SaveChanges() > 0;
+        }
+        catch
+        {
+            return false;
+        }
+
+    }
+
+    public dynamic findByOrderId(int orderId)
+    {
+        return db.Deliveries
+            .Where(x => x.OrderId == orderId)
+           .Select(p => new
+           {
+               Id = p.Id,
+               OrderId = p.OrderId,
+               DeliveryDate = p.DeliveryDate,
+               RecipientName = p.RecipientName,
+               RecipientAddress = p.RecipientAddress,
+               RecipientPhone = p.RecipientPhone,
+               Message = p.Message,
+               status = p.Status
+
+           }).FirstOrDefault()!;
+    }
+
+    public bool UpdateDeliveryStatus(int id)
+    {
+        try
+        {
+            var existingOrder = db.Deliveries.FirstOrDefault(o => o.Id == id);
+            if (existingOrder != null)
             {
-                Debug.WriteLine(ex);
+                existingOrder.Status = "1";
+
+                // Save changes to the database
+                return db.SaveChanges() > 0;
+            }
+            else
+            {
+                // Return false if the order with the specified OrderId does not exist
                 return false;
             }
         }
+        catch
+        {
+            return false;
+        }
+    }
 
+    public bool UpdateDeliveryStatus2(int id)
+    {
+        try
+        {
+            var existingOrder = db.Deliveries.FirstOrDefault(o => o.Id == id);
+            if (existingOrder != null)
+            {
+                existingOrder.Status = "2";
+
+                // Save changes to the database
+                return db.SaveChanges() > 0;
+            }
+            else
+            {
+                // Return false if the order with the specified OrderId does not exist
+                return false;
+            }
+        }
+        catch
+        {
+            return false;
+        }
     }
 }

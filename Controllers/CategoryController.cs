@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using PlantNestBackEnd.Helplers;
 using PlantNestBackEnd.Models;
 using PlantNestBackEnd.Services;
 
@@ -149,7 +150,7 @@ public class CategoryController : ControllerBase
             if (category == null) return NotFound("Can  not  Get  Category!");
             if (file != null)
             {
-                var fileName = GenerateRandomString(10);
+                var fileName = RandomHelper.RandomString(10);
                 fileName = Path.Combine("category", fileName + Path.GetExtension(file.FileName));
 
                 var filePath = Path.Combine(_webHostEnvironment.WebRootPath, fileName);
@@ -213,7 +214,7 @@ public class CategoryController : ControllerBase
                     }
 
                 }
-                var fileName = GenerateRandomString(10);
+                var fileName = RandomHelper.RandomString(10);
                 fileName = Path.Combine("category", fileName + Path.GetExtension(file.FileName));
 
                 var filePath = Path.Combine(_webHostEnvironment.WebRootPath, fileName);
@@ -294,11 +295,11 @@ public class CategoryController : ControllerBase
 
 
 
-    public string GenerateRandomString(int length)
-    {
-        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        var random = new Random();
-        return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
-    }
+    //public string GenerateRandomString(int length)
+    //{
+    //    const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    //    var random = new Random();
+    //    return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
+    //}
 
 }

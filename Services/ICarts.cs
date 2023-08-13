@@ -12,4 +12,7 @@ public interface ICarts
     public bool addCart(Cart Cart);
     //Cập nhật(update) Cart
     public bool updateCart(Cart Cart);
+    // delete
+    public bool DeleteCart(int cartId);
+    public bool DeleteCartByAccountId(int accountId);
 }

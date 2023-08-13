@@ -72,4 +72,21 @@ public class FavoriteCartController : ControllerBase
         }
     }
 
+    [Produces("application/json")]
+    [Consumes("application/json")]
+    [HttpGet("findByAccountId/{accId}")]
+    public IActionResult FindByAccountId(int accId)
+    {
+        try
+        {
+            var fillAll = favoriteCartService.findByAccountId(accId);
+            return Ok(fillAll);
+        }
+        catch (Exception ex)
+        {
+            // ma 400: la co loi roi
+            return BadRequest(ex);
+        }
+    }
+
 }
